@@ -1,0 +1,61 @@
+// External Real Estate Database Schema
+// This is a READ-ONLY connection to external property data
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/client-external-re"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("REAL_ESTATE_DATABASE_URL")
+}
+
+// Property Listings Table
+model property_listings {
+  id                String    @id @default(uuid())
+  formatted_address String?
+  city              String?
+  state             String?
+  zip_code          String?
+  price             Decimal?  @db.Decimal(12, 2)
+  bedrooms          Int?
+  bathrooms         Decimal?  @db.Decimal(3, 1)
+  square_footage    Int?
+  lot_size          Decimal?  @db.Decimal(10, 2)
+  year_built        Int?
+  property_type     String?
+  status            String?
+  listing_date      DateTime?
+  days_on_market    Int?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  @@map("property_listings")
+}
+
+// County Economic Metrics
+model county_economic_metrics {
+  id                String    @id @default(uuid())
+  county            String?
+  state             String?
+  population        Int?
+  medianIncome      Decimal?  @map("median_income") @db.Decimal(12, 2)
+  unemploymentRate  Decimal?  @map("unemployment_rate") @db.Decimal(5, 2)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@map("county_economic_metrics")
+}
+
+// National Economic Metrics
+model national_economic_metrics {
+  id                String    @id @default(uuid())
+  metricName        String?   @map("metric_name")
+  metricValue       Decimal?  @map("metric_value") @db.Decimal(12, 4)
+  metricDate        DateTime? @map("metric_date")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@map("national_economic_metrics")
+}

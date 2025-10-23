@@ -1,0 +1,89 @@
+{
+  "status": "success",
+  "best_model": "RandomForest",
+  "metrics": {
+    "mae": 40.58063518820142,
+    "rmse": 60.93746979334343,
+    "r2": 0.3088191455521905
+  },
+  "all_results": {
+    "RandomForest": {
+      "mae": 40.58063518820142,
+      "rmse": 60.93746979334343,
+      "r2": 0.3088191455521905
+    },
+    "GradientBoosting": {
+      "mae": 40.837246597350905,
+      "rmse": 61.59180824146043,
+      "r2": 0.29389583493851257
+    },
+    "XGBoost": {
+      "mae": 40.864952087402344,
+      "rmse": 62.06760191139376,
+      "r2": 0.2829445004463196
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "latitude",
+      "importance": 0.1839406684646493
+    },
+    {
+      "feature": "price_per_sqft",
+      "importance": 0.16670399471705888
+    },
+    {
+      "feature": "longitude",
+      "importance": 0.11361533105391197
+    },
+    {
+      "feature": "distToDowntown",
+      "importance": 0.07001652515617827
+    },
+    {
+      "feature": "formatted_address",
+      "importance": 0.054960659044270777
+    },
+    {
+      "feature": "daysIntoYear",
+      "importance": 0.052556430440278704
+    },
+    {
+      "feature": "square_footage",
+      "importance": 0.050734847655737755
+    },
+    {
+      "feature": "price",
+      "importance": 0.03972225730464483
+    },
+    {
+      "feature": "year_built",
+      "importance": 0.03970412817856976
+    },
+    {
+      "feature": "property_age",
+      "importance": 0.03597387243144932
+    },
+    {
+      "feature": "zip_code",
+      "importance": 0.03347910895706487
+    },
+    {
+      "feature": "propertyAge",
+      "importance": 0.03253261067050187
+    },
+    {
+      "feature": "lot_size",
+      "importance": 0.030805206500117824
+    },
+    {
+      "feature": "listing_day_of_week",
+      "importance": 0.02403501349004806
+    },
+    {
+      "feature": "listing_month",
+      "importance": 0.01816664208469008
+    }
+  ],
+  "training_samples": 24143
+}

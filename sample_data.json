@@ -1,0 +1,82 @@
+[
+  {
+    "days_on_market": 45,
+    "price": 350000,
+    "square_feet": 2000,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "year_built": 2005
+  },
+  {
+    "days_on_market": 30,
+    "price": 425000,
+    "square_feet": 2500,
+    "bedrooms": 4,
+    "bathrooms": 2.5,
+    "year_built": 2010
+  },
+  {
+    "days_on_market": 60,
+    "price": 280000,
+    "square_feet": 1600,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "year_built": 1995
+  },
+  {
+    "days_on_market": 20,
+    "price": 550000,
+    "square_feet": 3000,
+    "bedrooms": 4,
+    "bathrooms": 3,
+    "year_built": 2015
+  },
+  {
+    "days_on_market": 90,
+    "price": 200000,
+    "square_feet": 1200,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "year_built": 1980
+  },
+  {
+    "days_on_market": 15,
+    "price": 600000,
+    "square_feet": 3200,
+    "bedrooms": 5,
+    "bathrooms": 3.5,
+    "year_built": 2018
+  },
+  {
+    "days_on_market": 40,
+    "price": 380000,
+    "square_feet": 2200,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "year_built": 2008
+  },
+  {
+    "days_on_market": 55,
+    "price": 310000,
+    "square_feet": 1800,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "year_built": 2000
+  },
+  {
+    "days_on_market": 25,
+    "price": 475000,
+    "square_feet": 2700,
+    "bedrooms": 4,
+    "bathrooms": 2.5,
+    "year_built": 2012
+  },
+  {
+    "days_on_market": 35,
+    "price": 400000,
+    "square_feet": 2300,
+    "bedrooms": 3,
+    "bathrooms": 2.5,
+    "year_built": 2009
+  }
+]

@@ -1,0 +1,47 @@
+# Python virtual environment
+Lib/
+Scripts/
+Include/
+pyvenv.cfg
+pip-selfcheck.json
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment variables
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files
+*.pkl
+*.joblib
+*.h5
+*.pth
+
+# Data files
+*.csv
+*.xlsx
+*.xls
+
+# Logs
+*.log
+logs/
