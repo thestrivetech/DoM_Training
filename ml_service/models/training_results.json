@@ -2,93 +2,82 @@
   "status": "success",
   "best_model": "Ensemble",
   "metrics": {
-    "mae": 39.292559030817486,
-    "rmse": 58.90175796626698,
-    "r2": 0.367265711020175
+    "mae": 34.72916607644387,
+    "rmse": 48.00950423329327,
+    "r2": 0.0067050831810480105
   },
   "all_results": {
     "RandomForest": {
-      "mae": 39.21225462405223,
-      "rmse": 59.00341477216347,
-      "r2": 0.36507979146449443
+      "mae": 34.69715038872222,
+      "rmse": 48.05860988274521,
+      "r2": 0.004672096680129467
     },
     "GradientBoosting": {
-      "mae": 40.36154394546765,
-      "rmse": 60.64785732028685,
-      "r2": 0.3291957886532356
+      "mae": 35.28385597039008,
+      "rmse": 48.567924408868194,
+      "r2": -0.0165362217872973
     },
     "XGBoost": {
-      "mae": 39.524600982666016,
-      "rmse": 59.31345288683989,
-      "r2": 0.35838979482650757
+      "mae": 35.193904876708984,
+      "rmse": 48.49096343811133,
+      "r2": -0.013317108154296875
+    },
+    "LightGBM": {
+      "mae": 35.21211965502882,
+      "rmse": 48.502905406460165,
+      "r2": -0.01381632255506493
     },
     "Ensemble": {
-      "mae": 39.292559030817486,
-      "rmse": 58.90175796626698,
-      "r2": 0.367265711020175
+      "mae": 34.72916607644387,
+      "rmse": 48.00950423329327,
+      "r2": 0.0067050831810480105
     }
   },
   "feature_importance": [
     {
-      "feature": "latitude",
-      "importance": 0.09235575118418715
-    },
-    {
-      "feature": "longitude",
-      "importance": 0.07608860254328348
-    },
-    {
-      "feature": "competitiveness_score",
-      "importance": 0.06303619963768396
+      "feature": "dist_to_downtown",
+      "importance": 0.17991328707134732
     },
     {
       "feature": "days_into_year",
-      "importance": 0.05118535560895998
-    },
-    {
-      "feature": "bathrooms_x_price_per_sqft",
-      "importance": 0.04681585273775692
-    },
-    {
-      "feature": "price_per_sqft_x_zip_days",
-      "importance": 0.043172988198032176
-    },
-    {
-      "feature": "sqft_per_bedroom",
-      "importance": 0.040924753675085794
-    },
-    {
-      "feature": "price_x_competition",
-      "importance": 0.038451381853836945
-    },
-    {
-      "feature": "zip_quick_sale_pct",
-      "importance": 0.036818929421464044
-    },
-    {
-      "feature": "square_footage",
-      "importance": 0.03536858639094016
-    },
-    {
-      "feature": "price_vs_zip_median",
-      "importance": 0.0328948270944125
+      "importance": 0.17788012643370105
     },
     {
       "feature": "price",
-      "importance": 0.030054932237763437
+      "importance": 0.14972782107812804
+    },
+    {
+      "feature": "square_footage",
+      "importance": 0.1476150758450265
+    },
+    {
+      "feature": "property_age",
+      "importance": 0.1206511307786362
     },
     {
       "feature": "lot_size",
-      "importance": 0.029026654833637276
+      "importance": 0.09337963265970922
     },
     {
-      "feature": "price_per_sqft_squared",
-      "importance": 0.02884628240534195
+      "feature": "mean_days_on_market_by_zip",
+      "importance": 0.05171177176789029
     },
     {
-      "feature": "price_per_sqft",
-      "importance": 0.027824474270978235
+      "feature": "bathrooms",
+      "importance": 0.03434544613711246
+    },
+    {
+      "feature": "bedrooms",
+      "importance": 0.021351601881841577
+    },
+    {
+      "feature": "property_type",
+      "importance": 0.01717078125718791
+    },
+    {
+      "feature": "is_peak_season",
+      "importance": 0.006253325089419448
     }
   ],
-  "training_samples": 24143
+  "training_samples": 24082
 }
