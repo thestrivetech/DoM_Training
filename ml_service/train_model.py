@@ -275,12 +275,12 @@ class RealEstateMLModel:
         # lgbm_model = lgbm_grid.best_estimator_
         # print(f"Best LGBM params: {lgbm_grid.best_params_}", file=sys.stderr)
 
-        # USE BEST PARAMETERS FOUND FROM PREVIOUS TUNING
-        print("\nUsing pre-tuned hyperparameters (fast mode)...", file=sys.stderr)
+        # USE BEST PARAMETERS FOUND FROM PREVIOUS TUNING (REDUCED FOR SMALLER MODEL SIZE)
+        print("\nUsing pre-tuned hyperparameters (fast mode, reduced estimators)...", file=sys.stderr)
 
-        # RandomForest with best params: max_depth=15, n_estimators=300
+        # RandomForest with best params: max_depth=15, n_estimators=100 (reduced from 300)
         rf_model = RandomForestRegressor(
-            n_estimators=300,
+            n_estimators=100,
             max_depth=15,
             min_samples_split=5,
             min_samples_leaf=2,
@@ -288,9 +288,9 @@ class RealEstateMLModel:
             n_jobs=-1
         )
 
-        # XGBoost with best params: learning_rate=0.05, max_depth=6
+        # XGBoost with best params: learning_rate=0.05, max_depth=6, n_estimators=100 (reduced from 200)
         xgb_model = XGBRegressor(
-            n_estimators=200,
+            n_estimators=100,
             max_depth=6,
             learning_rate=0.05,
             subsample=0.8,
@@ -298,9 +298,9 @@ class RealEstateMLModel:
             n_jobs=-1
         )
 
-        # LightGBM with best params: n_estimators=200, num_leaves=31
+        # LightGBM with best params: n_estimators=100 (reduced from 200), num_leaves=31
         lgbm_model = LGBMRegressor(
-            n_estimators=200,
+            n_estimators=100,
             num_leaves=31,
             max_depth=10,
             learning_rate=0.05,
@@ -310,9 +310,9 @@ class RealEstateMLModel:
             enable_categorical=False
         )
 
-        # GradientBoosting with good default params
+        # GradientBoosting with good default params, n_estimators=100 (reduced from 200)
         gb_model = GradientBoostingRegressor(
-            n_estimators=200,
+            n_estimators=100,
             max_depth=7,
             learning_rate=0.1,
             min_samples_split=5,
