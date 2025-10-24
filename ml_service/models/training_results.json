@@ -2,81 +2,85 @@
   "status": "success",
   "best_model": "Ensemble",
   "metrics": {
-    "mae": 34.816467443751954,
-    "rmse": 48.04266511441431,
-    "r2": 0.005332442044684305
+    "mae": 33.23020942995371,
+    "rmse": 46.023167239761975,
+    "r2": 0.06000556234777066
   },
   "all_results": {
     "RandomForest": {
-      "mae": 34.80948073667005,
-      "rmse": 48.09467295595356,
-      "r2": 0.0031777525557903363
+      "mae": 33.306579224501945,
+      "rmse": 46.36996148574833,
+      "r2": 0.045786078406899966
     },
     "GradientBoosting": {
-      "mae": 35.17192101545437,
-      "rmse": 48.429740115462494,
-      "r2": -0.01076000173100633
+      "mae": 33.482820933170515,
+      "rmse": 46.24815673904192,
+      "r2": 0.050792557927954785
     },
     "XGBoost": {
-      "mae": 35.30202865600586,
-      "rmse": 48.74572547365692,
-      "r2": -0.02399265766143799
+      "mae": 33.814186096191406,
+      "rmse": 46.73418693542902,
+      "r2": 0.030736923217773438
     },
     "LightGBM": {
-      "mae": 35.30621946510163,
-      "rmse": 48.71208989911279,
-      "r2": -0.022580002652919706
+      "mae": 33.93782198932079,
+      "rmse": 46.79813746443764,
+      "r2": 0.028082469327961324
     },
     "Ensemble": {
-      "mae": 34.816467443751954,
-      "rmse": 48.04266511441431,
-      "r2": 0.005332442044684305
+      "mae": 33.23020942995371,
+      "rmse": 46.023167239761975,
+      "r2": 0.06000556234777066
     }
   },
   "feature_importance": [
     {
+      "feature": "rolling_dom_30d",
+      "importance": 0.16036927334028134
+    },
+    {
+      "feature": "month_cos",
+      "importance": 0.11031913824601901
+    },
+    {
       "feature": "dist_to_downtown",
-      "importance": 0.18094607856621042
+      "importance": 0.10728733417241358
     },
     {
-      "feature": "days_into_year",
-      "importance": 0.17792213778862803
+      "feature": "month_sin",
+      "importance": 0.10320151398259543
     },
     {
-      "feature": "price",
-      "importance": 0.14867557855592523
-    },
-    {
-      "feature": "square_footage",
-      "importance": 0.14715397705527325
+      "feature": "price_per_sqft_deviation",
+      "importance": 0.09070027230363005
     },
     {
       "feature": "property_age",
-      "importance": 0.12000112742236602
+      "importance": 0.09050838798106248
     },
     {
-      "feature": "lot_size",
-      "importance": 0.09349456096995172
+      "feature": "price_per_sqft",
+      "importance": 0.08046385641168148
+    },
+    {
+      "feature": "square_footage",
+      "importance": 0.07801575015677455
+    },
+    {
+      "feature": "log_price",
+      "importance": 0.07404886529377551
     },
     {
       "feature": "mean_days_on_market_by_zip",
-      "importance": 0.05230806072885596
+      "importance": 0.03906900857513607
     },
     {
-      "feature": "bathrooms",
-      "importance": 0.03466601252355116
+      "feature": "total_rooms",
+      "importance": 0.03358796126056937
     },
     {
-      "feature": "bedrooms",
-      "importance": 0.02128829289693179
-    },
-    {
-      "feature": "property_type",
-      "importance": 0.01739940950964948
-    },
-    {
-      "feature": "is_peak_season",
-      "importance": 0.006144763982656907
+      "feature": "median_price_per_sqft_by_zip",
+      "importance": 0.03242863827606129
     }
   ],
   "training_samples": 24082

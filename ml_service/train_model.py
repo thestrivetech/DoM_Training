@@ -32,9 +32,8 @@ def fetch_data_from_supabase():
         # Connect to the database
         conn = psycopg2.connect(db_url)
 
-        # Simple query - fetch only basic features from inactive_listings
-        # Calculate mean_days_on_market_by_zip as window function
-        # Calculate propertyAge from yearBuilt
+        # Simplified query - fetch only the most important features
+        # Removed: lot_size, is_peak_season, property_type (low importance)
         query = """
             SELECT
                 il."zipCode" as zip_code,
@@ -44,11 +43,9 @@ def fetch_data_from_supabase():
                 il."distToDowntown" as dist_to_downtown,
                 il.bedrooms,
                 il.bathrooms,
-                il."propertyType" as property_type,
                 EXTRACT(YEAR FROM CURRENT_DATE) - il."yearBuilt" as property_age,
-                il."lotSize" as lot_size,
-                il."isPeakSeason" as is_peak_season,
                 il."daysIntoYear" as days_into_year,
+                il.created_at as created_at,
                 il."daysOnMarket" as days_on_market
             FROM inactive_listings il
             WHERE il."daysOnMarket" IS NOT NULL
@@ -56,6 +53,7 @@ def fetch_data_from_supabase():
             AND il.bedrooms IS NOT NULL
             AND il."squareFootage" IS NOT NULL
             AND il."yearBuilt" IS NOT NULL
+            ORDER BY il.created_at
         """
 
         # Fetch data into a pandas DataFrame
@@ -119,6 +117,76 @@ class RealEstateMLModel:
 
         return df
 
+    def engineer_features(self, df):
+        """Add advanced feature engineering: price_per_sqft, log(price), month, rolling DOM"""
+        df = df.copy()
+
+        # 0. Combine bedrooms and bathrooms into single feature (simplification)
+        if 'bedrooms' in df.columns and 'bathrooms' in df.columns:
+            df['total_rooms'] = df['bedrooms'] + df['bathrooms']
+            # Drop individual bedroom/bathroom columns to simplify
+            df = df.drop(['bedrooms', 'bathrooms'], axis=1)
+            print("Added feature: total_rooms (combined bedrooms + bathrooms)", file=sys.stderr)
+
+        # 1. Add price_per_sqft
+        if 'price' in df.columns and 'square_footage' in df.columns:
+            # Avoid division by zero
+            df['price_per_sqft'] = df['price'] / df['square_footage'].replace(0, np.nan)
+            df['price_per_sqft'].fillna(df['price_per_sqft'].median(), inplace=True)
+            print("Added feature: price_per_sqft", file=sys.stderr)
+
+        # 1.5. Add zip-level pricing features (BEFORE dropping price)
+        if 'price_per_sqft' in df.columns and 'zip_code' in df.columns:
+            # Calculate median price per sqft for each zip code
+            df['median_price_per_sqft_by_zip'] = df.groupby('zip_code')['price_per_sqft'].transform('median')
+
+            # Calculate relative pricing: how much this property deviates from zip median
+            # Positive = overpriced for area, Negative = underpriced for area
+            df['price_per_sqft_deviation'] = (df['price_per_sqft'] - df['median_price_per_sqft_by_zip']) / df['median_price_per_sqft_by_zip'].replace(0, np.nan)
+            df['price_per_sqft_deviation'].fillna(0, inplace=True)  # Fill NaN with 0 (no deviation)
+
+            print("Added zip features: median_price_per_sqft_by_zip, price_per_sqft_deviation", file=sys.stderr)
+
+        # 2. Add log(price) - helps with price skewness
+        if 'price' in df.columns:
+            # Use log1p to handle any zero values (though price shouldn't be 0)
+            df['log_price'] = np.log1p(df['price'])
+            # Drop original price to avoid redundancy (log_price is better for skewed data)
+            df = df.drop('price', axis=1)
+            print("Added feature: log_price (removed price to avoid redundancy)", file=sys.stderr)
+
+        # 3. Add month encoding from days_into_year
+        if 'days_into_year' in df.columns:
+            # Create cyclical encoding for month (sin/cos to capture seasonality)
+            # Directly convert days_into_year to radians for sin/cos
+            month_approx = ((df['days_into_year'] - 1) / 30.44).clip(0, 11.99)
+            df['month_sin'] = np.sin(2 * np.pi * month_approx / 12)
+            df['month_cos'] = np.cos(2 * np.pi * month_approx / 12)
+            # Drop days_into_year since month_sin/cos already capture this info
+            df = df.drop('days_into_year', axis=1)
+            print("Added features: month_sin, month_cos (removed days_into_year - redundant)", file=sys.stderr)
+
+        # 4. Add rolling DOM (30-day rolling average by zip code)
+        if 'created_at' in df.columns and 'zip_code' in df.columns and self.target_name in df.columns:
+            # Ensure created_at is datetime
+            if not pd.api.types.is_datetime64_any_dtype(df['created_at']):
+                df['created_at'] = pd.to_datetime(df['created_at'])
+
+            # Sort by date for rolling calculations
+            df = df.sort_values('created_at')
+
+            # Calculate rolling mean of DOM by zip code (30-day window, strictly backward-looking)
+            # Use shift(1) to ensure we only use PAST data, not including the current row
+            df['rolling_dom_30d'] = df.groupby('zip_code')[self.target_name].transform(
+                lambda x: x.shift(1).rolling(window=30, min_periods=5).mean()
+            )
+
+            # Fill NaN values with the overall mean for that zip
+            df['rolling_dom_30d'].fillna(df['mean_days_on_market_by_zip'], inplace=True)
+            print("Added feature: rolling_dom_30d (30-row rolling average by zip, backward-looking)", file=sys.stderr)
+
+        return df
+
     def train(self, data):
         """Train the model on the provided data"""
         # Convert to DataFrame if it's a list of dicts
@@ -137,12 +205,16 @@ class RealEstateMLModel:
         if len(df) < 10:
             raise ValueError("Not enough data to train the model (need at least 10 samples)")
 
+        # ENGINEER NEW FEATURES (before splitting)
+        print("\nEngineering advanced features...", file=sys.stderr)
+        df = self.engineer_features(df)
+
         # Separate features and target
         y = df[self.target_name].copy()
         X = df.drop(self.target_name, axis=1)
 
-        # Drop ID columns and other non-predictive columns
-        cols_to_drop = [col for col in X.columns if col.lower() in ['id', 'index', 'address', 'status']]
+        # Drop ID columns and other non-predictive columns (including created_at used for rolling features)
+        cols_to_drop = [col for col in X.columns if col.lower() in ['id', 'index', 'address', 'status', 'created_at']]
         X = X.drop(cols_to_drop, axis=1, errors='ignore')
 
         # APPLY OUTLIER CAPPING BEFORE SPLIT (to avoid data leakage, we cap on full dataset)
@@ -151,11 +223,7 @@ class RealEstateMLModel:
         print(f"Capping days_on_market at 95th percentile: {days_95th:.0f} days", file=sys.stderr)
         y = y.clip(upper=days_95th)
 
-        # Also cap price in X
-        if 'price' in X.columns:
-            price_95th = X['price'].quantile(0.95)
-            print(f"Capping price at 95th percentile: ${price_95th:,.0f}", file=sys.stderr)
-            X['price'] = X['price'].clip(upper=price_95th)
+        # Note: No longer capping price since we use log_price which is less sensitive to outliers
 
         # Split data FIRST to avoid data leakage
         X_train, X_test, y_train, y_test = train_test_split(
