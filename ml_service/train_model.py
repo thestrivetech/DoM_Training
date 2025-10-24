@@ -407,18 +407,19 @@ class RealEstateMLModel:
         else:
             feature_importance = []
 
-        # Save model
+        # Save model with compression
         model_dir = Path(__file__).parent / 'models'
         model_dir.mkdir(exist_ok=True)
 
-        joblib.dump(self.model, model_dir / 'model.pkl')
-        joblib.dump(self.scaler, model_dir / 'scaler.pkl')
-        joblib.dump(self.label_encoders, model_dir / 'label_encoders.pkl')
-        joblib.dump(self.feature_names, model_dir / 'feature_names.pkl')
+        # Use compress=3 for good compression (0-9, higher = smaller but slower)
+        joblib.dump(self.model, model_dir / 'model.pkl', compress=3)
+        joblib.dump(self.scaler, model_dir / 'scaler.pkl', compress=3)
+        joblib.dump(self.label_encoders, model_dir / 'label_encoders.pkl', compress=3)
+        joblib.dump(self.feature_names, model_dir / 'feature_names.pkl', compress=3)
 
         # Save zip code statistics if they exist
         if hasattr(self, 'zip_stats'):
-            joblib.dump(self.zip_stats, model_dir / 'zip_stats.pkl')
+            joblib.dump(self.zip_stats, model_dir / 'zip_stats.pkl', compress=3)
             print(f"Saved zip code statistics for {len(self.zip_stats)} zip codes", file=sys.stderr)
 
         return {
