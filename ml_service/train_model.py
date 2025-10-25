@@ -185,6 +185,16 @@ class RealEstateMLModel:
             df['rolling_dom_30d'].fillna(df['mean_days_on_market_by_zip'], inplace=True)
             print("Added feature: rolling_dom_30d (30-row rolling average by zip, backward-looking)", file=sys.stderr)
 
+            # Calculate rolling mean of DOM by zip code (90-day window, strictly backward-looking)
+            # Use shift(1) to ensure we only use PAST data, not including the current row
+            df['rolling_dom_90d'] = df.groupby('zip_code')[self.target_name].transform(
+                lambda x: x.shift(1).rolling(window=90, min_periods=10).mean()
+            )
+
+            # Fill NaN values with the overall mean for that zip
+            df['rolling_dom_90d'].fillna(df['mean_days_on_market_by_zip'], inplace=True)
+            print("Added feature: rolling_dom_90d (90-row rolling average by zip, backward-looking)", file=sys.stderr)
+
         return df
 
     def train(self, data):
